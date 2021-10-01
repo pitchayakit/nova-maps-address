@@ -11,7 +11,7 @@
                 :value="this.formatted"
                 ref="input"
             />
-            <div id="nova-maps-address-container" ref="container"></div>
+            <div :id="fieldName"  class="nova-maps-address-container" ref="container"></div>
         </template>
     </default-field>
 </template>
@@ -31,7 +31,8 @@ export default {
         return {
             maps: null,
             value: null,
-            formatted: null
+            formatted: null,
+            fieldName: _.snakeCase(this.field.name)
         }
     },
 
@@ -54,7 +55,6 @@ export default {
     },
     mounted() {
         this.setInitialValue()
-
         this.maps = new Maps({
             input: this.$refs.input,
             container: this.$refs.container,
@@ -66,7 +66,8 @@ export default {
             autoCompleteOptions: this.field.autoCompleteOptions,
             scriptUrlParams: this.field.scriptUrlParams,
             mapOptions: this.field.mapOptions,
-            allowMapClick: this.field.allowMapClick
+            allowMapClick: this.field.allowMapClick,
+            fieldName: this.fieldName,
         });
 
         this.maps.on('change', (data) => {
@@ -78,9 +79,13 @@ export default {
         this.maps.destroy()
     }
 }
+
+
+
+        
 </script>
 <style>
-#nova-maps-address-container {
+.nova-maps-address-container {
     height: 400px;
     margin-top: 1rem;
     border-width: 1px;

@@ -16,10 +16,23 @@ class Maps {
 
         this.settings.input.addEventListener('input', this.onInput)
 
-        window.initMap = () => {
-            this.initializeServices()
-            this.initializeAddress(this.settings.value)
+        if(this.settings.fieldName == 'google_map_internal') {
+            window.initMap = () => {
+
+                this.initializeServices()
+                this.initializeAddress(this.settings.value)
+                
+                window.initPublicMap()
+            }
         }
+        else {
+            window.initPublicMap = () => {
+
+                this.initializeServices()
+                this.initializeAddress(this.settings.value)
+            }
+        }
+
         this.appendScript()
     }
 
@@ -34,8 +47,9 @@ class Maps {
     }
 
     initializeServices() {
+
         this.map = new google.maps.Map(
-            document.getElementById('nova-maps-address-container'),
+            document.getElementById(this.settings.fieldName),
             {
                 zoom: this.settings.zoom,
                 center: this.settings.center,
@@ -65,7 +79,10 @@ class Maps {
         this.script.id = 'nova-maps-address-script'
         this.script.defer = true
 
-        document.head.appendChild(this.script);
+        if( !document.getElementById("nova-maps-address-script")) {
+            document.head.appendChild(this.script);
+        }
+           
     }
 
     getUrlParamsFromObj(params) {
@@ -149,7 +166,7 @@ class Maps {
 
     destroy() {
         window.google = undefined
-        this.script.remove()
+       this.script.remove()
     }
 }
 
