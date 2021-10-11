@@ -846,6 +846,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -862,7 +883,9 @@ var timeout = void 0;
             maps: null,
             value: null,
             formatted: null,
-            fieldName: _.snakeCase(this.field.name)
+            fieldName: _.snakeCase(this.field.name),
+            latitude: null,
+            longitude: null
         };
     },
 
@@ -874,6 +897,8 @@ var timeout = void 0;
         setInitialValue: function setInitialValue() {
             var address = this.field.value;
             this.formatted = address ? address.formatted_address : '';
+            this.latitude = address ? address.latitude : '';
+            this.longitude = address ? address.longitude : '';
             this.value = JSON.stringify(this.field.value) || '';
         },
 
@@ -883,6 +908,9 @@ var timeout = void 0;
          */
         fill: function fill(formData) {
             formData.append(this.field.attribute, this.value || '');
+        },
+        refreshMap: function refreshMap() {
+            this.maps.updateMapGeocode(this.latitude, this.longitude);
         }
     },
     mounted: function mounted() {
@@ -901,12 +929,15 @@ var timeout = void 0;
             scriptUrlParams: this.field.scriptUrlParams,
             mapOptions: this.field.mapOptions,
             allowMapClick: this.field.allowMapClick,
-            fieldName: this.fieldName
+            fieldName: this.fieldName,
+            resourceName: this.resourceName
         });
 
         this.maps.on('change', function (data) {
             _this.value = data.value;
             _this.formatted = data.formatted;
+            _this.latitude = data.latitude;
+            _this.longitude = data.longitude;
         });
     },
     destroyed: function destroyed() {
@@ -27282,16 +27313,24 @@ var Maps = function () {
 
         this.settings.input.addEventListener('input', this.onInput);
 
-        if (this.settings.fieldName == 'google_map_internal') {
-            window.initMap = function () {
+        if (this.settings.resourceName == 'properties') {
+            if (this.settings.fieldName == 'google_map_internal') {
+                window.initMap = function () {
 
-                _this.initializeServices();
-                _this.initializeAddress(_this.settings.value);
+                    _this.initializeServices();
+                    _this.initializeAddress(_this.settings.value);
 
-                window.initPublicMap();
-            };
+                    window.initPublicMap();
+                };
+            } else {
+                window.initPublicMap = function () {
+
+                    _this.initializeServices();
+                    _this.initializeAddress(_this.settings.value);
+                };
+            }
         } else {
-            window.initPublicMap = function () {
+            window.initMap = function () {
 
                 _this.initializeServices();
                 _this.initializeAddress(_this.settings.value);
@@ -27366,7 +27405,9 @@ var Maps = function () {
 
             this.emit('change', {
                 value: JSON.stringify(this.formatter.format(place)),
-                formatted: place.formatted_address
+                formatted: place.formatted_address,
+                latitude: place.geometry.location.lat(),
+                longitude: place.geometry.location.lng()
             });
         }
     }, {
@@ -27390,7 +27431,9 @@ var Maps = function () {
 
                     _this2.emit('change', {
                         value: JSON.stringify(_this2.formatter.format(place)),
-                        formatted: place.formatted_address
+                        formatted: place.formatted_address,
+                        latitude: place.geometry.location.lat(),
+                        longitude: place.geometry.location.lng()
                     });
                 }
             });
@@ -27436,6 +27479,13 @@ var Maps = function () {
             this.events[event].forEach(function (callback) {
                 return callback(data);
             });
+        }
+    }, {
+        key: 'updateMapGeocode',
+        value: function updateMapGeocode(latitude, longitude) {
+            var location = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+            this.setMarker(location);
+            this.map.panTo(location);
         }
     }, {
         key: 'destroy',
@@ -27551,7 +27601,81 @@ var render = function() {
           ref: "container",
           staticClass: "nova-maps-address-container",
           attrs: { id: _vm.fieldName }
-        })
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex flex-wrap w-full" }, [
+          _c("div", { staticClass: "flex w-1/2" }, [
+            _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
+              _c(
+                "label",
+                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                [_vm._v("Lat")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "py-3 w-4/5" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.latitude,
+                    expression: "latitude"
+                  }
+                ],
+                staticClass:
+                  "w-full form-control form-input form-input-bordered nova-maps-address-input",
+                attrs: { type: "number", step: "any" },
+                domProps: { value: _vm.latitude },
+                on: {
+                  change: _vm.refreshMap,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.latitude = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex w-1/2" }, [
+            _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
+              _c(
+                "label",
+                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                [_vm._v("Lon")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "py-3 w-4/5" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.longitude,
+                    expression: "longitude"
+                  }
+                ],
+                staticClass:
+                  "w-full form-control form-input form-input-bordered nova-maps-address-input",
+                attrs: { type: "number", step: "any" },
+                domProps: { value: _vm.longitude },
+                on: {
+                  change: _vm.refreshMap,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.longitude = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        ])
       ])
     ],
     2

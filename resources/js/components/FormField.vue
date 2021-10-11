@@ -12,6 +12,27 @@
                 ref="input"
             />
             <div :id="fieldName"  class="nova-maps-address-container" ref="container"></div>
+
+            <div class="flex flex-wrap w-full">
+                <div class="flex w-1/2">
+                    <div class="w-1/5 py-3 pl-2">
+                        <label class="inline-block text-80 pt-2 leading-tight">Lat</label>
+                    </div>
+                    <div class="py-3 w-4/5">
+                    <input type="number" step=any v-model="latitude" @change="refreshMap" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
+                    </div>
+                </div>
+
+                <div class="flex w-1/2">
+                    <div class="w-1/5 py-3 pl-2">
+                        <label class="inline-block text-80 pt-2 leading-tight">Lon</label>
+                    </div>
+                    <div class="py-3 w-4/5">
+                    <input  type="number" step=any v-model="longitude"  @change="refreshMap" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
+                    </div>
+                </div>
+            </div>
+           
         </template>
     </default-field>
 </template>
@@ -32,7 +53,9 @@ export default {
             maps: null,
             value: null,
             formatted: null,
-            fieldName: _.snakeCase(this.field.name)
+            fieldName: _.snakeCase(this.field.name),
+            latitude: null,
+            longitude: null,
         }
     },
 
@@ -43,6 +66,8 @@ export default {
         setInitialValue() {
             const address = this.field.value
             this.formatted = address ? address.formatted_address : ''
+            this.latitude = address ? address.latitude : ''
+            this.longitude = address ? address.longitude : ''
             this.value = JSON.stringify(this.field.value) || ''
         },
 
@@ -52,6 +77,10 @@ export default {
         fill(formData) {
             formData.append(this.field.attribute, this.value || '')
         },
+
+        refreshMap() {
+            this.maps.updateMapGeocode(this.latitude, this.longitude)
+        }
     },
     mounted() {
         this.setInitialValue()
@@ -68,11 +97,14 @@ export default {
             mapOptions: this.field.mapOptions,
             allowMapClick: this.field.allowMapClick,
             fieldName: this.fieldName,
+            resourceName: this.resourceName,
         });
 
         this.maps.on('change', (data) => {
             this.value = data.value
             this.formatted = data.formatted
+            this.latitude = data.latitude
+            this.longitude = data.longitude
         })
     },
     destroyed() {

@@ -16,18 +16,27 @@ class Maps {
 
         this.settings.input.addEventListener('input', this.onInput)
 
-        if(this.settings.fieldName == 'google_map_internal') {
-            window.initMap = () => {
-
-                this.initializeServices()
-                this.initializeAddress(this.settings.value)
-                
-                window.initPublicMap()
+        if(this.settings.resourceName == 'properties') {
+            if(this.settings.fieldName == 'google_map_internal') {
+                window.initMap = () => {
+    
+                    this.initializeServices()
+                    this.initializeAddress(this.settings.value)
+                    
+                    window.initPublicMap()
+                }
+            }
+            else {
+                window.initPublicMap = () => {
+    
+                    this.initializeServices()
+                    this.initializeAddress(this.settings.value)
+                }
             }
         }
         else {
-            window.initPublicMap = () => {
-
+            window.initMap = () => {
+    
                 this.initializeServices()
                 this.initializeAddress(this.settings.value)
             }
@@ -101,7 +110,9 @@ class Maps {
 
         this.emit('change', {
             value: JSON.stringify(this.formatter.format(place)),
-            formatted: place.formatted_address
+            formatted: place.formatted_address,
+            latitude: place.geometry.location.lat(),
+            longitude: place.geometry.location.lng(),
         })
     }
 
@@ -122,7 +133,9 @@ class Maps {
 
                 this.emit('change', {
                     value: JSON.stringify(this.formatter.format(place)),
-                    formatted: place.formatted_address
+                    formatted: place.formatted_address,
+                    latitude: place.geometry.location.lat(),
+                    longitude: place.geometry.location.lng(),
                 })
             }
         })
@@ -162,6 +175,12 @@ class Maps {
         }
 
         this.events[event].forEach((callback) => callback(data))
+    }
+
+    updateMapGeocode(latitude, longitude) {
+        const location = {lat: parseFloat(latitude), lng: parseFloat(longitude)}
+        this.setMarker(location)
+        this.map.panTo(location)
     }
 
     destroy() {
