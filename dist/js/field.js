@@ -27360,7 +27360,7 @@ var Maps = function () {
                 center: this.settings.center,
                 mapTypeControl: false,
                 streetViewControl: false,
-                fullscreenControl: false
+                fullscreenControl: true
             }, this.settings.mapOptions));
 
             this.geocoder = new google.maps.Geocoder();

@@ -64,7 +64,7 @@ class Maps {
                 center: this.settings.center,
                 mapTypeControl: false,
                 streetViewControl: false,
-                fullscreenControl: false,
+                fullscreenControl: true,
                 ...this.settings.mapOptions,
             }
         )
