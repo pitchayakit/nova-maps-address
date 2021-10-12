@@ -898,7 +898,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n#nova-maps-address-container {\r\n    height: 400px;\r\n    margin-top: 1rem;\r\n    border-width: 1px;\r\n    border-color: var(--60);\r\n    border-radius: .5rem;\n}\r\n", ""]);
+exports.push([module.i, "\n.nova-maps-address-container {\r\n    height: 400px;\r\n    margin-top: 1rem;\r\n    border-width: 1px;\r\n    border-color: var(--60);\r\n    border-radius: .5rem;\n}\r\n", ""]);
 
 // exports
 
@@ -970,6 +970,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['resource', 'resourceName', 'resourceId', 'field'],
 
+    data: function data() {
+        return {
+            fieldName: _.snakeCase(this.field.name)
+        };
+    },
+
+
     methods: {
         getValue: function getValue() {
 
@@ -1000,7 +1007,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             autoCompleteOptions: this.field.autoCompleteOptions,
             scriptUrlParams: this.field.scriptUrlParams,
             mapOptions: this.field.mapOptions,
-            allowMapClick: false
+            allowMapClick: false,
+            fieldName: this.fieldName,
+            resourceName: this.resourceName
         });
     }
 });
@@ -1098,7 +1107,8 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", {
                   ref: "container",
-                  attrs: { id: "nova-maps-address-container" }
+                  staticClass: "nova-maps-address-container",
+                  attrs: { id: _vm.fieldName }
                 })
               ]
             : _vm._e()
