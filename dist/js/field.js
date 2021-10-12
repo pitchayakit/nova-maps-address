@@ -1015,7 +1015,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     destroyed: function destroyed() {
-        this.maps.destroy();
+        if (this.field.value && this.field.value.formatted_address) {
+            this.maps.destroy();
+        }
     }
 });
 
