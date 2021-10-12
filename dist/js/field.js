@@ -996,21 +996,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.setInitialValue();
 
-        this.maps = new __WEBPACK_IMPORTED_MODULE_0__Maps__["a" /* default */]({
-            input: this.$refs.input,
-            container: this.$refs.container,
-            value: this.field.value,
-            key: this.field.googleKey,
-            zoom: this.field.zoom,
-            center: this.field.center,
-            types: this.field.types,
-            autoCompleteOptions: this.field.autoCompleteOptions,
-            scriptUrlParams: this.field.scriptUrlParams,
-            mapOptions: this.field.mapOptions,
-            allowMapClick: false,
-            fieldName: this.fieldName,
-            resourceName: this.resourceName
-        });
+        if (this.field.value && this.field.value.formatted_address) {
+            this.maps = new __WEBPACK_IMPORTED_MODULE_0__Maps__["a" /* default */]({
+                input: this.$refs.input,
+                container: this.$refs.container,
+                value: this.field.value,
+                key: this.field.googleKey,
+                zoom: this.field.zoom,
+                center: this.field.center,
+                types: this.field.types,
+                autoCompleteOptions: this.field.autoCompleteOptions,
+                scriptUrlParams: this.field.scriptUrlParams,
+                mapOptions: this.field.mapOptions,
+                allowMapClick: false,
+                fieldName: this.fieldName,
+                resourceName: this.resourceName
+            });
+        }
+    },
+    destroyed: function destroyed() {
+        this.maps.destroy();
     }
 });
 
