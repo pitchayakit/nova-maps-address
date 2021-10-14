@@ -996,28 +996,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.setInitialValue();
 
-        if (this.field.value && this.field.value.formatted_address) {
-            this.maps = new __WEBPACK_IMPORTED_MODULE_0__Maps__["a" /* default */]({
-                input: this.$refs.input,
-                container: this.$refs.container,
-                value: this.field.value,
-                key: this.field.googleKey,
-                zoom: this.field.zoom,
-                center: this.field.center,
-                types: this.field.types,
-                autoCompleteOptions: this.field.autoCompleteOptions,
-                scriptUrlParams: this.field.scriptUrlParams,
-                mapOptions: this.field.mapOptions,
-                allowMapClick: false,
-                fieldName: this.fieldName,
-                resourceName: this.resourceName
-            });
-        }
+        this.maps = new __WEBPACK_IMPORTED_MODULE_0__Maps__["a" /* default */]({
+            input: this.$refs.input,
+            container: this.$refs.container,
+            value: this.field.value,
+            key: this.field.googleKey,
+            zoom: this.field.zoom,
+            center: this.field.center,
+            types: this.field.types,
+            autoCompleteOptions: this.field.autoCompleteOptions,
+            scriptUrlParams: this.field.scriptUrlParams,
+            mapOptions: this.field.mapOptions,
+            allowMapClick: false,
+            fieldName: this.fieldName,
+            resourceName: this.resourceName
+        });
     },
     destroyed: function destroyed() {
-        if (this.field.value && this.field.value.formatted_address) {
-            this.maps.destroy();
-        }
+        this.maps.destroy();
     }
 });
 
@@ -1092,36 +1088,28 @@ var render = function() {
     "panel-item",
     { attrs: { field: _vm.field } },
     [
-      _c(
-        "template",
-        { slot: "value" },
-        [
-          _vm._v("\n        " + _vm._s(_vm.getValue()) + "\n        "),
-          this.field.showMapOnDetail
-            ? [
-                _c("input", {
-                  ref: "input",
-                  staticClass:
-                    "w-full form-control form-input form-input-bordered nova-maps-address-input hidden",
-                  class: _vm.errorClasses,
-                  attrs: {
-                    id: _vm.field.name,
-                    type: "text",
-                    placeholder: _vm.field.name
-                  },
-                  domProps: { value: this.formatted }
-                }),
-                _vm._v(" "),
-                _c("div", {
-                  ref: "container",
-                  staticClass: "nova-maps-address-container",
-                  attrs: { id: _vm.fieldName }
-                })
-              ]
-            : _vm._e()
-        ],
-        2
-      )
+      _c("template", { slot: "value" }, [
+        _vm._v("\n        " + _vm._s(_vm.getValue()) + "\n\n            "),
+        _c("input", {
+          ref: "input",
+          staticClass:
+            "w-full form-control form-input form-input-bordered nova-maps-address-input hidden",
+          class: _vm.errorClasses,
+          attrs: {
+            id: _vm.field.name,
+            type: "text",
+            placeholder: _vm.field.name
+          },
+          domProps: { value: this.formatted }
+        }),
+        _vm._v(" "),
+        _c("div", {
+          ref: "container",
+          staticClass: "nova-maps-address-container",
+          class: { hidden: !this.field.value },
+          attrs: { id: _vm.fieldName }
+        })
+      ])
     ],
     2
   )

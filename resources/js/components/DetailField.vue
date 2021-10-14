@@ -2,7 +2,7 @@
     <panel-item :field="field">
         <template slot="value">
             {{ getValue() }}
-            <template v-if="this.field.showMapOnDetail ">
+
                 <input
                     :id="field.name"
                     type="text"
@@ -13,8 +13,8 @@
                     ref="input"
 
                 />
-               <div :id="fieldName"  class="nova-maps-address-container" ref="container"></div>
-            </template>
+               <div :id="fieldName"  class="nova-maps-address-container" :class="{ hidden: !this.field.value }" ref="container"></div>
+
         </template>
     </panel-item>
 </template>
@@ -51,7 +51,6 @@ export default {
     mounted() {
         this.setInitialValue()
 
-        if (this.field.value && this.field.value.formatted_address) {
             this.maps = new Maps({
                 input: this.$refs.input,
                 container: this.$refs.container,
@@ -67,13 +66,10 @@ export default {
                 fieldName: this.fieldName,
                 resourceName: this.resourceName,
             });
-        }
     },
 
     destroyed() {
-        if (this.field.value && this.field.value.formatted_address) {
-            this.maps.destroy()
-        }
+        this.maps.destroy()
     }
 }
 </script>
