@@ -106,6 +106,11 @@ export default {
             this.latitude = data.latitude
             this.longitude = data.longitude
         })
+
+        this.maps.on('updateFormatAddress', (data) => {
+            this.formatted = data.formatted
+            this.value = data.value
+        })
     },
     destroyed() {
         this.maps.destroy()
