@@ -56,7 +56,13 @@ export default {
             fieldName: _.snakeCase(this.field.name),
             latitude: null,
             longitude: null,
+            developmentMapValue: null,
         }
+    },
+
+    created () {
+        if(this.resourceName === 'properties' && this.field.value == null) 
+            this.registerDependencyWatchers(this.$root);
     },
 
     methods: {
@@ -80,7 +86,62 @@ export default {
 
         refreshMap() {
             this.maps.updateMapGeocode(this.latitude, this.longitude)
-        }
+        },
+
+        registerDependencyWatchers(root) {
+            root.$children.forEach(component => {
+                if (this.componentIsDependency(component)) {
+                    if (component.selectedResourceId !== undefined) {
+                        // BelongsTo field
+                         component.$watch('selectedResourceId', this.dependencyWatcher);
+                    } 
+                }
+                this.registerDependencyWatchers(component);
+            })
+        },
+
+        componentIsDependency(component) {
+            if (component.field === undefined) {
+                return false;
+            }
+
+            return component.field.attribute === 'development';
+        },
+
+        dependencyWatcher(value) {
+            clearTimeout(this.watcherDebounce);
+            
+            this.watcherDebounce = setTimeout(() => {
+                if (value === this.dependsOnValue) {
+                    return;
+                }
+
+                this.dependsOnValue = value;
+                this.getDevelopmentValue(value)
+
+                this.watcherDebounce = null;
+            }, this.watcherDebounceTimeout);
+        },
+
+        getDevelopmentValue(developmentId) {
+            Nova.request(`/api/developments/${developmentId}/google-map`).then((data) => {
+                
+                const address = data.data
+
+                //Update map value
+                if(address) {
+                    this.formatted = address ? address.formatted_address : ''
+                    this.latitude = address ? address.latitude : ''
+                    this.longitude = address ? address.longitude : ''
+                    this.value = JSON.stringify(address) || ''
+
+                    this.refreshMap()
+                }
+                else {
+                    this.maps.reset()
+                }
+          });
+        },
     },
     mounted() {
         this.setInitialValue()

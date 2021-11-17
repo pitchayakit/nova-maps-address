@@ -1292,8 +1292,12 @@ var timeout = void 0;
             formatted: null,
             fieldName: _.snakeCase(this.field.name),
             latitude: null,
-            longitude: null
+            longitude: null,
+            developmentMapValue: null
         };
+    },
+    created: function created() {
+        if (this.resourceName === 'properties' && this.field.value == null) this.registerDependencyWatchers(this.$root);
     },
 
 
@@ -1318,10 +1322,66 @@ var timeout = void 0;
         },
         refreshMap: function refreshMap() {
             this.maps.updateMapGeocode(this.latitude, this.longitude);
+        },
+        registerDependencyWatchers: function registerDependencyWatchers(root) {
+            var _this = this;
+
+            root.$children.forEach(function (component) {
+                if (_this.componentIsDependency(component)) {
+                    if (component.selectedResourceId !== undefined) {
+                        // BelongsTo field
+                        component.$watch('selectedResourceId', _this.dependencyWatcher);
+                    }
+                }
+                _this.registerDependencyWatchers(component);
+            });
+        },
+        componentIsDependency: function componentIsDependency(component) {
+            if (component.field === undefined) {
+                return false;
+            }
+
+            return component.field.attribute === 'development';
+        },
+        dependencyWatcher: function dependencyWatcher(value) {
+            var _this2 = this;
+
+            clearTimeout(this.watcherDebounce);
+
+            this.watcherDebounce = setTimeout(function () {
+                if (value === _this2.dependsOnValue) {
+                    return;
+                }
+
+                _this2.dependsOnValue = value;
+                _this2.getDevelopmentValue(value);
+
+                _this2.watcherDebounce = null;
+            }, this.watcherDebounceTimeout);
+        },
+        getDevelopmentValue: function getDevelopmentValue(developmentId) {
+            var _this3 = this;
+
+            Nova.request('/api/developments/' + developmentId + '/google-map').then(function (data) {
+
+                var address = data.data;
+
+                //Update map value
+                if (address) {
+                    _this3.formatted = address ? address.formatted_address : '';
+                    _this3.latitude = address ? address.latitude : '';
+                    _this3.longitude = address ? address.longitude : '';
+                    _this3.value = JSON.stringify(address) || '';
+
+                    _this3.refreshMap();
+                } else {
+                    _this3.maps.reset();
+                }
+            });
         }
     },
     mounted: function mounted() {
-        var _this = this;
+        var _this4 = this;
 
         this.setInitialValue();
         this.maps = new __WEBPACK_IMPORTED_MODULE_1__Maps__["a" /* default */]({
@@ -1341,15 +1401,10 @@ var timeout = void 0;
         });
 
         this.maps.on('change', function (data) {
-            _this.value = data.value;
-            _this.formatted = data.formatted;
-            _this.latitude = data.latitude;
-            _this.longitude = data.longitude;
-        });
-
-        this.maps.on('updateFormatAddress', function (data) {
-            _this.formatted = data.formatted;
-            _this.value = data.value;
+            _this4.value = data.value;
+            _this4.formatted = data.formatted;
+            _this4.latitude = data.latitude;
+            _this4.longitude = data.longitude;
         });
     },
     destroyed: function destroyed() {
@@ -27740,12 +27795,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                { staticClass: "inline-block pt-2 leading-tight text-80" },
                 [_vm._v("Lat")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "py-3 w-4/5" }, [
+            _c("div", { staticClass: "w-4/5 py-3" }, [
               _c("input", {
                 directives: [
                   {
@@ -27776,12 +27831,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                { staticClass: "inline-block pt-2 leading-tight text-80" },
                 [_vm._v("Long")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "py-3 w-4/5" }, [
+            _c("div", { staticClass: "w-4/5 py-3" }, [
               _c("input", {
                 directives: [
                   {
