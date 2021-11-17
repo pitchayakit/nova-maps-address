@@ -616,8 +616,9 @@ var Maps = function () {
     }, {
         key: 'onInput',
         value: function onInput(e) {
-            //this.reset()
-            //this.emit('change', { formatted: e.target.value })
+            // this.reset()
+            // this.emit('change', { formatted: e.target.value })
+
             this.settings.value.formatted_address = e.target.value;
 
             this.emit('updateFormatAddress', {
@@ -1340,6 +1341,11 @@ var timeout = void 0;
             _this.formatted = data.formatted;
             _this.latitude = data.latitude;
             _this.longitude = data.longitude;
+        });
+
+        this.maps.on('updateFormatAddress', function (data) {
+            _this.formatted = data.formatted;
+            _this.value = data.value;
         });
 
         this.maps.on('updateFormatAddress', function (data) {

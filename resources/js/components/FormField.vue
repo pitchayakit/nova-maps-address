@@ -111,6 +111,11 @@ export default {
             this.formatted = data.formatted
             this.value = data.value
         })
+
+        this.maps.on('updateFormatAddress', (data) => {
+            this.formatted = data.formatted
+            this.value = data.value
+        })
     },
     destroyed() {
         this.maps.destroy()
