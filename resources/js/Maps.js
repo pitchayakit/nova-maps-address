@@ -62,7 +62,7 @@ class Maps {
             {
                 zoom: this.settings.zoom,
                 center: this.settings.center,
-                mapTypeControl: false,
+                mapTypeControl: true,
                 streetViewControl: false,
                 fullscreenControl: true,
                 ...this.settings.mapOptions,

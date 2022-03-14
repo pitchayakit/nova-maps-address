@@ -561,7 +561,7 @@ var Maps = function () {
             this.map = new google.maps.Map(document.getElementById(this.settings.fieldName), _extends({
                 zoom: this.settings.zoom,
                 center: this.settings.center,
-                mapTypeControl: false,
+                mapTypeControl: true,
                 streetViewControl: false,
                 fullscreenControl: true
             }, this.settings.mapOptions));
@@ -27795,12 +27795,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block pt-2 leading-tight text-80" },
+                { staticClass: "inline-block text-80 pt-2 leading-tight" },
                 [_vm._v("Lat")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "w-4/5 py-3" }, [
+            _c("div", { staticClass: "py-3 w-4/5" }, [
               _c("input", {
                 directives: [
                   {
@@ -27831,12 +27831,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block pt-2 leading-tight text-80" },
+                { staticClass: "inline-block text-80 pt-2 leading-tight" },
                 [_vm._v("Long")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "w-4/5 py-3" }, [
+            _c("div", { staticClass: "py-3 w-4/5" }, [
               _c("input", {
                 directives: [
                   {
