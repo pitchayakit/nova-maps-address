@@ -16,19 +16,19 @@
             <div class="flex flex-wrap w-full">
                 <div class="flex w-1/2">
                     <div class="w-1/5 py-3 pl-2">
-                        <label class="inline-block text-80 pt-2 leading-tight">Lat</label>
+                        <label class="inline-block pt-2 leading-tight text-80">Lat</label>
                     </div>
-                    <div class="py-3 w-4/5">
-                    <input type="number" step=any v-model="latitude" @change="refreshMap" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
+                    <div class="w-4/5 py-3">
+                    <input type="number" step=any v-model="latitude" @change="latLongChange" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
                     </div>
                 </div>
 
                 <div class="flex w-1/2">
                     <div class="w-1/5 py-3 pl-2">
-                        <label class="inline-block text-80 pt-2 leading-tight">Long</label>
+                        <label class="inline-block pt-2 leading-tight text-80">Long</label>
                     </div>
-                    <div class="py-3 w-4/5">
-                    <input  type="number" step=any v-model="longitude"  @change="refreshMap" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
+                    <div class="w-4/5 py-3">
+                    <input  type="number" step=any v-model="longitude"  @change="latLongChange" class="w-full form-control form-input form-input-bordered nova-maps-address-input">
                     </div>
                 </div>
             </div>
@@ -82,6 +82,21 @@ export default {
          */
         fill(formData) {
             formData.append(this.field.attribute, this.value || '')
+        },
+
+        latLongChange() {
+
+            if(this.latitude && this.longitude) {
+                let obj = {
+                    latitude : parseFloat(this.latitude),
+                    longitude : parseFloat(this.longitude),
+                }
+
+                 this.value = JSON.stringify(obj) || ''
+
+                this.refreshMap();
+            }
+               
         },
 
         refreshMap() {

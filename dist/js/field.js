@@ -1320,6 +1320,19 @@ var timeout = void 0;
         fill: function fill(formData) {
             formData.append(this.field.attribute, this.value || '');
         },
+        latLongChange: function latLongChange() {
+
+            if (this.latitude && this.longitude) {
+                var obj = {
+                    latitude: parseFloat(this.latitude),
+                    longitude: parseFloat(this.longitude)
+                };
+
+                this.value = JSON.stringify(obj) || '';
+
+                this.refreshMap();
+            }
+        },
         refreshMap: function refreshMap() {
             this.maps.updateMapGeocode(this.latitude, this.longitude);
         },
@@ -27795,12 +27808,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                { staticClass: "inline-block pt-2 leading-tight text-80" },
                 [_vm._v("Lat")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "py-3 w-4/5" }, [
+            _c("div", { staticClass: "w-4/5 py-3" }, [
               _c("input", {
                 directives: [
                   {
@@ -27815,7 +27828,7 @@ var render = function() {
                 attrs: { type: "number", step: "any" },
                 domProps: { value: _vm.latitude },
                 on: {
-                  change: _vm.refreshMap,
+                  change: _vm.latLongChange,
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -27831,12 +27844,12 @@ var render = function() {
             _c("div", { staticClass: "w-1/5 py-3 pl-2" }, [
               _c(
                 "label",
-                { staticClass: "inline-block text-80 pt-2 leading-tight" },
+                { staticClass: "inline-block pt-2 leading-tight text-80" },
                 [_vm._v("Long")]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "py-3 w-4/5" }, [
+            _c("div", { staticClass: "w-4/5 py-3" }, [
               _c("input", {
                 directives: [
                   {
@@ -27851,7 +27864,7 @@ var render = function() {
                 attrs: { type: "number", step: "any" },
                 domProps: { value: _vm.longitude },
                 on: {
-                  change: _vm.refreshMap,
+                  change: _vm.latLongChange,
                   input: function($event) {
                     if ($event.target.composing) {
                       return
