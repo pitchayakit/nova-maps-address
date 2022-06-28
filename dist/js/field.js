@@ -631,25 +631,17 @@ var Maps = function () {
     }, {
         key: 'onClick',
         value: function onClick(data) {
-            var _this2 = this;
-
             this.setMarker(data.latLng);
-            this.geocoder.geocode(_extends({
-                location: data.latLng
-            }, this.settings.geocodeOptions), function (data, status) {
-                var place = data[0];
-                if (place && status === google.maps.places.PlacesServiceStatus.OK) {
-                    _this2.setMarker(place.geometry.location);
 
-                    _this2.settings.value = _this2.formatter.format(place);
+            this.settings.value = {
+                latitude: data.latLng.lat(),
+                longitude: data.latLng.lng()
+            };
 
-                    _this2.emit('change', {
-                        value: JSON.stringify(_this2.settings.value),
-                        formatted: place.formatted_address,
-                        latitude: place.geometry.location.lat(),
-                        longitude: place.geometry.location.lng()
-                    });
-                }
+            this.emit('change', {
+                value: JSON.stringify(this.settings.value),
+                latitude: data.latLng.lat(),
+                longitude: data.latLng.lng()
             });
         }
     }, {

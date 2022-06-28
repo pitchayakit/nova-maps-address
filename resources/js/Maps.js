@@ -119,7 +119,7 @@ class Maps {
     onInput(e) {
         // this.reset()
         // this.emit('change', { formatted: e.target.value })
-
+        
         this.settings.value.formatted_address = e.target.value;
         
         this.emit('change', {
@@ -132,24 +132,18 @@ class Maps {
 
     onClick(data) {
         this.setMarker(data.latLng)
-        this.geocoder.geocode({
-            location: data.latLng,
-            ...this.settings.geocodeOptions
-        }, (data, status) => {
-            const place = data[0]
-            if (place && status === google.maps.places.PlacesServiceStatus.OK) {
-                this.setMarker(place.geometry.location)
-                
-                this.settings.value = this.formatter.format(place)
-                
-                this.emit('change', {
-                    value: JSON.stringify(this.settings.value),
-                    formatted: place.formatted_address,
-                    latitude: place.geometry.location.lat(),
-                    longitude: place.geometry.location.lng(),
-                })
-            }
+        
+        this.settings.value = {
+            latitude : data.latLng.lat(),
+            longitude : data.latLng.lng(),
+        }
+
+        this.emit('change', {
+            value: JSON.stringify(this.settings.value),
+            latitude: data.latLng.lat(),
+            longitude: data.latLng.lng(),
         })
+        
     }
 
     reset() {
