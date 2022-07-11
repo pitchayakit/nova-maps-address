@@ -16,30 +16,9 @@ class Maps {
 
         this.settings.input.addEventListener('input', this.onInput)
 
-        if(this.settings.resourceName == 'properties') {
-            if(this.settings.fieldName == 'google_map_internal') {
-                window.initMap = () => {
-    
-                    this.initializeServices()
-                    this.initializeAddress(this.settings.value)
-                    
-                    window.initPublicMap()
-                }
-            }
-            else {
-                window.initPublicMap = () => {
-    
-                    this.initializeServices()
-                    this.initializeAddress(this.settings.value)
-                }
-            }
-        }
-        else {
-            window.initMap = () => {
-    
-                this.initializeServices()
-                this.initializeAddress(this.settings.value)
-            }
+        window.initMap = () => {
+            this.initializeServices()
+            this.initializeAddress(this.settings.value)
         }
 
         this.appendScript()

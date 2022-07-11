@@ -516,29 +516,10 @@ var Maps = function () {
 
         this.settings.input.addEventListener('input', this.onInput);
 
-        if (this.settings.resourceName == 'properties') {
-            if (this.settings.fieldName == 'google_map_internal') {
-                window.initMap = function () {
-
-                    _this.initializeServices();
-                    _this.initializeAddress(_this.settings.value);
-
-                    window.initPublicMap();
-                };
-            } else {
-                window.initPublicMap = function () {
-
-                    _this.initializeServices();
-                    _this.initializeAddress(_this.settings.value);
-                };
-            }
-        } else {
-            window.initMap = function () {
-
-                _this.initializeServices();
-                _this.initializeAddress(_this.settings.value);
-            };
-        }
+        window.initMap = function () {
+            _this.initializeServices();
+            _this.initializeAddress(_this.settings.value);
+        };
 
         this.appendScript();
     }
