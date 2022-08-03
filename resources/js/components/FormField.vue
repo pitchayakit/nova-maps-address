@@ -139,7 +139,7 @@ export default {
         },
 
         getDevelopmentValue(developmentId) {
-            Nova.request(`/api/developments/${developmentId}/google-map`).then((data) => {
+            Nova.request(`/nova-vendor/api/developments/${developmentId}/google-map`).then((data) => {
                 
                 const address = data.data
 

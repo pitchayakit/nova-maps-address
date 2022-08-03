@@ -1348,7 +1348,7 @@ var timeout = void 0;
         getDevelopmentValue: function getDevelopmentValue(developmentId) {
             var _this3 = this;
 
-            Nova.request('/api/developments/' + developmentId + '/google-map').then(function (data) {
+            Nova.request('/nova-vendor/api/developments/' + developmentId + '/google-map').then(function (data) {
 
                 var address = data.data;
 
