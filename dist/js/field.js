@@ -964,8 +964,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         getValue: function getValue() {
 
-            if (this.field.value && this.field.value.formatted_address) {
-                return this.field.value.formatted_address;
+            if (this.field.value) {
+                var value = this.field.value.latitude + ', ' + this.field.value.longitude;
+
+                //Display position name if exist
+                if (this.field.value.formatted_address) value += ' | ' + this.field.value.formatted_address;
+
+                return value;
             }
 
             return '-';
@@ -1077,7 +1082,7 @@ var render = function() {
         _c("input", {
           ref: "input",
           staticClass:
-            "w-full form-control form-input form-input-bordered nova-maps-address-input hidden",
+            "hidden w-full form-control form-input form-input-bordered nova-maps-address-input",
           class: _vm.errorClasses,
           attrs: {
             id: _vm.field.name,

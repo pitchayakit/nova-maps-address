@@ -6,7 +6,7 @@
                 <input
                     :id="field.name"
                     type="text"
-                    class="w-full form-control form-input form-input-bordered nova-maps-address-input hidden"
+                    class="hidden w-full form-control form-input form-input-bordered nova-maps-address-input"
                     :class="errorClasses"
                     :placeholder="field.name"
                     :value="this.formatted"
@@ -34,8 +34,14 @@ export default {
     methods: {
         getValue() {
 
-            if (this.field.value && this.field.value.formatted_address) {
-                return this.field.value.formatted_address
+            if (this.field.value) {
+                let value = `${this.field.value.latitude}, ${this.field.value.longitude}`
+                
+                //Display position name if exist
+                if(this.field.value.formatted_address)
+                    value += ` | ${this.field.value.formatted_address}`
+
+                return value;
             }
 
             return '-'
